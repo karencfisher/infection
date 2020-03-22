@@ -5,7 +5,6 @@ Created on Sun Mar 22 14:03:27 2020
 @author: yeshesdawa
 """
 
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -21,15 +20,22 @@ gamma = 1 / recovery_days
 initial_infections = 10  
 total_infections = initial_infections 
 
-doubling_time = 6 
-n_days = 200 # number of days to project
-
-detection_prob = initial_infections / total_infections
-S, I, R = S, initial_infections / detection_prob, 0
+# rate of doubling and growth rate
+doubling_time = 6
 intrinsic_growth_rate = 2 ** (1 / doubling_time) - 1
 
+# number of days to project
+n_days = 200
 
-# The SIR model, one time step (from Penn model)
+# this will also assume all infections are detected.
+detection_prob = initial_infections / total_infections
+
+#initial state
+S, I, R = S, initial_infections / detection_prob, 0
+
+
+
+# The SIR model, one time step (from Penn Medicine app)
 def sir(y, beta, gamma, N):
     S, I, R = y
     Sn = (-beta * S * I) + S
@@ -46,7 +52,7 @@ def sir(y, beta, gamma, N):
     return Sn * scale, In * scale, Rn * scale
 
 
-# Run the SIR model forward in time (from Penn model)
+# Run the SIR model forward in time (from Penn Medicine app)
 def sim_sir(S, I, R, beta, gamma, n_days, beta_decay=None):
     N = S + I + R
     s, i, r = [S], [I], [R]
